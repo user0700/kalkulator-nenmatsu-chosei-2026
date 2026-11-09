@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>基礎控除申告書 計算機 / Kalkulator 基礎控除申告書 (令和8年分)</title>
+<style>
+:root{--bg:#fbfaf7;--card:#fff;--ink:#1c2230;--sub:#5b6475;--line:#c9ccd3;--red:#c8312b;--redbg:#fdecea;--ok:#e9f3ec;--f:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",Meiryo,system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#14171d;--card:#1c2028;--ink:#eceef2;--sub:#a0a8b8;--line:#3a4050;--red:#ff7a72;--redbg:#3a1f1d;--ok:#1d3326}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f);padding:24px 14px 60px}
+main{max-width:720px;margin:0 auto}
+h1{font-size:1.3rem;margin:0 0 4px}
+h1 small{display:block;font-size:.9rem;font-weight:400;color:var(--sub)}
+h2{font-size:1.05rem;margin:28px 0 10px;padding-left:10px;border-left:4px solid var(--red)}
+h2 small{font-weight:400;color:var(--sub);margin-left:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px}
+label{display:block;font-weight:600;margin-top:12px}
+label:first-child{margin-top:0}
+label small{display:block;font-weight:400;color:var(--sub);font-size:.82rem}
+input[type=number]{width:100%;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+input:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-weight:400;margin-top:14px}
+.chk input{margin-top:6px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:right}
+th{background:var(--bg);font-weight:600;text-align:center;font-size:.9rem}
+td.l{text-align:left}
+th small,td small{display:block;font-weight:400;color:var(--sub);font-size:.78rem}
+.res{border:2px solid var(--red);background:var(--redbg);font-weight:700;font-size:1.15rem}
+.hit{background:var(--ok);font-weight:700}
+.hit td:first-child::before{content:"☑ "}
+tr:not(.hit) td:first-child::before{content:"☐ ";color:var(--sub)}
+.kbn{font-size:1.3rem;font-weight:700;text-align:center}
+.note{font-size:.84rem;color:var(--sub);margin-top:10px}
+.err{color:var(--red);font-size:.88rem;margin-top:8px;min-height:1.2em}
+details{margin-top:12px;font-size:.9rem}
+summary{cursor:pointer;color:var(--sub)}
+@media(max-width:480px){.g3{grid-template-columns:1fr}th,td{padding:6px}}
+</style>
+</head>
+<body>
+<main>
+<h1>給与所得者の基礎控除申告書 計算機
+<small>Kalkulator 基礎控除申告書 · 令和8年分 (2026) · 年末調整</small></h1>
+<p class="note">計算だけを行います。入力した内容は保存・送信されません。<br>Hanya untuk menghitung. Data yang diisi tidak disimpan maupun dikirim ke mana pun.</p>
+
+<h2>1. 入力 <small>Input</small></h2>
+<div class="card">
+  <label>給与の月額（額面・手取りではない）が低い方から3か月分
+    <small>Gaji bulanan (kotor/額面, sebelum dipotong) dari 3 bulan TERENDAH. Kalau baru kerja &lt; 3 bulan, isi yang ada saja.</small></label>
+  <div class="g3">
+    <input type="number" id="m1" min="0" inputmode="numeric" placeholder="例 180000" aria-label="bulan 1">
+    <input type="number" id="m2" min="0" inputmode="numeric" placeholder="例 185000" aria-label="bulan 2">
+    <input type="number" id="m3" min="0" inputmode="numeric" placeholder="例 190000" aria-label="bulan 3">
+  </div>
+  <div class="g2">
+    <div><label for="months">今年、給与をもらう月数
+      <small>Total bulan menerima gaji di tahun 2026 (1–12)</small></label>
+      <input type="number" id="months" min="1" max="12" inputmode="numeric" placeholder="12"></div>
+    <div><label for="bonus">賞与の見込額（なければ0）
+      <small>Perkiraan bonus tahun ini (kosongkan jika tidak ada)</small></label>
+      <input type="number" id="bonus" min="0" inputmode="numeric" placeholder="0"></div>
+  </div>
+  <label for="prev">前職の給与の支払金額（今年転職した場合のみ）
+    <small>Total gaji dari perusahaan sebelumnya tahun ini, lihat kolom 支払金額 di 源泉徴収票 (jika tidak pindah kerja, kosongkan). Bulan kerja di perusahaan lama TIDAK dihitung di kolom bulan di atas.</small></label>
+  <input type="number" id="prev" min="0" inputmode="numeric" placeholder="0">
+  <label for="other">給与所得以外の所得の合計額（なければ0）
+    <small>Total penghasilan selain gaji (angka 所得, bukan 収入). Contoh: usaha sampingan, 雑所得.</small></label>
+  <input type="number" id="other" min="0" inputmode="numeric" placeholder="0">
+  <label class="chk"><input type="checkbox" id="adj"><span>所得金額調整控除の適用がある（給与収入850万円超で、23歳未満の扶養親族または特別障害者の同一生計の家族がいる）
+    <small>Ada 所得金額調整控除 (gaji &gt; 8,5 juta yen dan ada tanggungan &lt; 23 tahun / keluarga disabilitas berat)</small></span></label>
+  <p class="note">※ 通勤手当のうち非課税の分は含めません。 / Tunjangan transport yang bebas pajak (非課税) tidak dimasukkan.</p>
+  <div class="err" id="err" role="alert"></div>
+</div>
+
+<h2>2. 合計所得金額の見積額 <small>Perkiraan 合計所得金額</small></h2>
+<table>
+  <tr><th>所得の種類<small>Jenis penghasilan</small></th><th>収入金額<small>Jumlah penerimaan</small></th><th>所得金額<small>Jumlah penghasilan</small></th></tr>
+  <tr><td class="l">(1) 給与所得<small>Gaji</small></td><td id="rev">—</td><td id="inc">—</td></tr>
+  <tr><td class="l">(2) 給与所得以外の所得の合計額<small>Penghasilan selain gaji</small></td><td>／</td><td id="oth">—</td></tr>
+  <tr><td class="l res">あなたの本年中の合計所得金額の見積額<small>(1)+(2)</small></td><td class="res">／</td><td class="res" id="tot">—</td></tr>
+</table>
+<details><summary>計算の内訳 / Rincian perhitungan</summary><p class="note" id="detail">—</p></details>
+
+<h2>3. 控除額の計算 <small>Perhitungan 基礎控除</small></h2>
+<table>
+  <tr><th>判定<small>Kolom yang dicentang</small></th><th>基礎控除額<small>Jumlah</small></th><th>区分Ⅰ</th></tr>
+  <tbody id="rows"></tbody>
+</table>
+<table style="margin-top:12px">
+  <tr><th style="width:50%">区分Ⅰ<small>(A〜C)</small></th><th>基礎控除の額<small>Jumlah 基礎控除</small></th></tr>
+  <tr><td class="kbn" id="kbn">—</td><td class="res" id="kiso">—</td></tr>
+</table>
+
+<p class="note">この結果は目安です。正式な金額は国税庁「合計所得金額の計算について（令和8年分）」および会社の経理担当者の指示に従ってください。<br>
+Hasil ini hanya perkiraan. Angka resmi mengikuti panduan 国税庁 dan arahan bagian 経理 perusahaan.</p>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat($(id).value); return isFinite(v) && v > 0 ? v : 0; };
+const yen = n => Math.round(n).toLocaleString('ja-JP') + ' 円';
+
+// 令和8年分 給与所得の金額 — 国税庁「合計所得金額の計算について」の表どおり (整数計算で誤差なし)
+function kyuyoShotoku(r){
+  if (r < 741000) return 0;
+  if (r < 2191000) return r - 740000;
+  if (r < 2193000) return 1451000;
+  if (r < 2196000) return 1453000;
+  if (r < 2200000) return 1456000;
+  const A = Math.floor(r / 4 / 1000) * 1000;
+  if (r < 3600000) return (A / 1000) * 2800 - 80000;
+  if (r < 6600000) return (A / 1000) * 3200 - 440000;
+  if (r < 8500000) return Math.floor(r * 9 / 10) - 1100000;
+  return r - 1950000;
+}
+
+const TABLE = [
+  {max:4890000,  amt:1040000, k:'A', lbl:'489万円以下'},
+  {max:6550000,  amt:670000,  k:'A', lbl:'489万円超 655万円以下'},
+  {max:9000000,  amt:620000,  k:'A', lbl:'655万円超 900万円以下'},
+  {max:9500000,  amt:620000,  k:'B', lbl:'900万円超 950万円以下'},
+  {max:10000000, amt:620000,  k:'C', lbl:'950万円超 1,000万円以下'},
+  {max:23500000, amt:620000,  k:'',  lbl:'1,000万円超 2,350万円以下'},
+  {max:24000000, amt:480000,  k:'',  lbl:'2,350万円超 2,400万円以下'},
+  {max:24500000, amt:320000,  k:'',  lbl:'2,400万円超 2,450万円以下'},
+  {max:25000000, amt:160000,  k:'',  lbl:'2,450万円超 2,500万円以下'}
+];
+
+function drawRows(total){
+  const hit = total === null ? -1 : TABLE.findIndex(t => total <= t.max);
+  $('rows').innerHTML = TABLE.map((t,i) =>
+    `<tr class="${i===hit?'hit':''}"><td class="l">${t.lbl}</td><td>${(t.amt/10000)}万円</td><td style="text-align:center">${t.k?'('+t.k+')':''}</td></tr>`
+  ).join('');
+  return hit;
+}
+
+function calc(){
+  const ms = ['m1','m2','m3'].map(num).filter(v => v > 0);
+  const months = Math.floor(num('months'));
+  const bonus = num('bonus'), other = num('other'), prev = Math.floor(num('prev'));
+  let err = '';
+  if ($('months').value && (months < 1 || months > 12)) err = '月数は1〜12で入力 / Isi bulan antara 1–12';
+
+  if (!ms.length || months < 1 || months > 12){
+    ['rev','inc','oth','tot','kbn','kiso'].forEach(i => $(i).textContent = '—');
+    $('detail').textContent = '—'; $('err').textContent = err; drawRows(null); return;
+  }
+  const avg = ms.reduce((a,b)=>a+b,0) / ms.length;
+  const rev = Math.floor(avg * months) + Math.floor(bonus) + prev;
+  let inc = Math.floor(kyuyoShotoku(rev));
+  let adjAmt = 0;
+  if ($('adj').checked && rev > 8500000){
+    adjAmt = Math.ceil((Math.min(rev, 10000000) - 8500000) * 0.1);
+    inc -= adjAmt;
+  }
+  const total = inc + Math.floor(other);
+  $('rev').textContent = yen(rev);
+  $('inc').textContent = yen(inc);
+  $('oth').textContent = yen(other);
+  $('tot').textContent = yen(total);
+
+  const hit = drawRows(total);
+  if (hit < 0){ $('kbn').textContent = '—'; $('kiso').textContent = '0 円'; }
+  else { $('kbn').textContent = TABLE[hit].k || '—'; $('kiso').textContent = yen(TABLE[hit].amt); }
+
+  $('detail').innerHTML =
+    `平均月額 / Rata-rata per bulan: ${yen(avg)} × ${months}か月 = ${yen(Math.floor(avg*months))}` +
+    (bonus ? ` ＋ 賞与 ${yen(bonus)}` : '') + (prev ? ` ＋ 前職 ${yen(prev)}` : '') + `<br>` +
+    `収入金額 ${yen(rev)} − 給与所得控除 ${yen(rev - inc - adjAmt)}` +
+    (adjAmt ? ` − 所得金額調整控除 ${yen(adjAmt)}` : '') + ` = 給与所得 ${yen(inc)}`;
+  $('err').textContent = err;
+}
+document.querySelectorAll('input').forEach(el => el.addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>
